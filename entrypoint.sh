@@ -58,8 +58,8 @@ function parse_ssm_file() {
 }
 
 function change_task_definition_file() {
-    jq ".containerDefinitions[0].secrets = $(cat $TMP_SSM_PARSED_FILE)" "$INPUT_TASK_DEFINITION_FILE_PATH" > task-definition-parsed.json
-    echo ::set-output name=task_definition::
+    jq ".containerDefinitions[0].secrets = $(cat $TMP_SSM_PARSED_FILE)" "$INPUT_TASK_DEFINITION_FILE_PATH" > task-definition-rendered.json
+    echo ::set-output name=task_definition::task-definition-rendered.json
 }
 
 function get_ssm_parameters() {
