@@ -1,0 +1,36 @@
+name: AWS SSM ECS Importer
+author: Emanuel Oliveira <emanuelflp@gmail.com>
+branding:
+  icon: upload-cloud
+  color: blue
+description: Get SSM Parameters from path and inject all in Task Definition JSON File.
+inputs:
+  access_key_id:
+    description: The AWS access key id
+    required: true
+  secret_access_key:
+    description: The AWS secret access key
+    required: true
+  account_id:
+    description: AWS Account ID
+    required: true
+  assume_role:
+    description: A role to assume under the account_id account.
+    required: false
+    default: ''
+  ssm_path:
+    description: Path in SSM
+    default: .
+    required: false
+  region:
+    description: The AWS region
+    required: true
+  task_definition_file_path:
+    description: Path to Task Definition File
+    required: true
+outputs:
+  task_definition:
+    description: 'The path to the rendered task definition file'
+runs:
+  using: docker
+  image: Dockerfile
