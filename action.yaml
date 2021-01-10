@@ -25,7 +25,7 @@ inputs:
   region:
     description: The AWS region
     required: true
-  task_definition:
+  task-definition:
     description: 'The path to the ECS task definition JSON file'
     required: true
 outputs:
