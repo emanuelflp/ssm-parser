@@ -13,7 +13,7 @@ function main() {
 
   aws_configure
   assume_role
-  get-ssm-parameters
+  get_ssm_parameters
   parse_ssm_file
   change_task_definition_file
 }
