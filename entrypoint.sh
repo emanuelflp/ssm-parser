@@ -51,7 +51,7 @@ function parse_ssm_file() {
 
 function change_task_definition_file() {
     jq ".containerDefinitions[0].secrets = $(cat $TMP_SSM_PARSED_FILE)" "$INPUT_TASK_DEFINITION" > task-definition-rendered.json
-    echo ::set-output name=task_definition::task-definition-rendered.json
+    echo ::set-output name=task-definition::task-definition-rendered.json
 }
 
 function get_ssm_parameters() {
