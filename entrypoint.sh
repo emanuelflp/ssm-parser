@@ -6,7 +6,7 @@ function main() {
   sanitize "${INPUT_SECRET_ACCESS_KEY}" "secret_access_key"
   sanitize "${INPUT_REGION}" "region"
   sanitize "${INPUT_ACCOUNT_ID}" "account_id"
-  sanitize "${INPUT_TASK_DEFINITION_FILE_PATH}" "task_definition_file_path"
+  sanitize "${INPUT_TASK_DEFINITION}" "task_definition"
 
   TMP_SSM_FILE=$(mktemp)
   TMP_SSM_PARSED_FILE=$(mktemp)
