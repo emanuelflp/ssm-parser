@@ -13,7 +13,6 @@ function main() {
 
   aws_configure
   assume_role
-  login
   get-ssm-parameters
   parse_ssm_file
   change_task_definition_file
@@ -30,13 +29,6 @@ function aws_configure() {
   export AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY
   export AWS_DEFAULT_REGION=$INPUT_REGION
-}
-
-function login() {
-  echo "== START LOGIN"
-  LOGIN_COMMAND=$(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-  $LOGIN_COMMAND
-  echo "== FINISHED LOGIN"
 }
 
 function assume_role() {
