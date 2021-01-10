@@ -50,7 +50,7 @@ function parse_ssm_file() {
 }
 
 function change_task_definition_file() {
-    jq ".containerDefinitions[0].secrets = $(cat $TMP_SSM_PARSED_FILE)" "$INPUT_TASK_DEFINITION_FILE_PATH" > task-definition-rendered.json
+    jq ".containerDefinitions[0].secrets = $(cat $TMP_SSM_PARSED_FILE)" "$INPUT_TASK_DEFINITION" > task-definition-rendered.json
     echo ::set-output name=task_definition::task-definition-rendered.json
 }
 
