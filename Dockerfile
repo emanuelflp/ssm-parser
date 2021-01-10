@@ -1,10 +1,10 @@
 FROM bash:latest
 
 RUN apk update \
+    && apk add --no-cache --update python3\
     && apk add --no-cache --update jq py-pip coreutils\
     && rm -rf /var/cache/apk/* \
-    && pip install awscli \
-    && apk --purge -v del py-pip
+    && pip install awscli
 
 ADD entrypoint.sh /entrypoint.sh
 
