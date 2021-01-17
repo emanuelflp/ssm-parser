@@ -7,6 +7,7 @@ function main() {
   sanitize "${INPUT_REGION}" "region"
   sanitize "${INPUT_ACCOUNT_ID}" "account_id"
   sanitize "${INPUT_TASK_DEFINITION}" "task_definition"
+  sanitize "${INPUT_CONTAINER_NAME}" "container_name"
 
   TMP_SSM_FILE=$(mktemp)
   TMP_SSM_PARSED_FILE=$(mktemp)
@@ -64,16 +65,19 @@ function change_task_definition_file() {
       local app_name
       app_name=$(echo "${row}" | base64 --decode | jq -r '.name')
       if [ "$app_name" == "$INPUT_CONTAINER_NAME" ]; then
-          echo "$row" | jq ".secrets = $(cat $TMP_SSM_PARSED_FILE)" > "$TMP_TD_CONTAINER_PARSED_FILE"
+          echo "$row" | base64 --decode | jq ".secrets = $(cat $TMP_SSM_PARSED_FILE)" > "$TMP_TD_CONTAINER_PARSED_FILE"
           CONTAINER_EXISTS=1
+      else
+          echo "$row" | base64 --decode > "$TMP_TD_CONTAINER_PARSED_FILE"
       fi
-      td_empty_container=$(echo $td_empty_container | jq ".containerDefinitions += $(cat $TMP_TD_CONTAINER_PARSED_FILE)")
+      td_empty_container=$( echo $td_empty_container | jq --argjson containerInfo "$(cat $TMP_TD_CONTAINER_PARSED_FILE)" '.containerDefinitions += [$containerInfo]')
+
     done
-    if [ ! $CONTAINER_EXISTS ]; then
+    if [ $CONTAINER_EXISTS -eq 0 ]; then
         echo "Container not exists in Task definition file."
         exit 1
     else
-      echo "$td_empty_container" > task-definition-rendered.json
+        echo "$td_empty_container" > task-definition-rendered.json
     fi
     echo ::set-output name=task-definition::task-definition-rendered.json
 }
