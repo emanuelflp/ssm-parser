@@ -12,6 +12,7 @@ function main() {
   TMP_SSM_FILE=$(mktemp)
   TMP_SSM_PARSED_FILE=$(mktemp)
   TMP_TD_CONTAINER_PARSED_FILE=$(mktemp)
+  FINAL_TD_FILE=$(mktemp)
   CONTAINER_EXISTS=0
   aws_configure
   assume_role
@@ -77,9 +78,9 @@ function change_task_definition_file() {
         echo "Container not exists in Task definition file."
         exit 1
     else
-        echo "$td_empty_container" > task-definition-rendered.json
+        echo "$td_empty_container" > $FINAL_TD_FILE
     fi
-    echo ::set-output name=task-definition::task-definition-rendered.json
+    echo ::set-output name=task-definition::$FINAL_TD_FILE
 }
 
 function get_ssm_parameters() {
