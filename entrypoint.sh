@@ -10,12 +10,21 @@ function main() {
 
   TMP_SSM_FILE=$(mktemp)
   TMP_SSM_PARSED_FILE=$(mktemp)
-
+  TMP_TD_CONTAINER_PARSED_FILE=$(mktemp)
+  CONTAINER_EXISTS=0
   aws_configure
   assume_role
   get_ssm_parameters
   parse_ssm_file
   change_task_definition_file
+  rm -f $TMP_SSM_FILE
+  rm -f $TMP_SSM_PARSED_FILE
+  rm -f $TMP_TD_CONTAINER_PARSED_FILE
+  unset TMP_SSM_FILE
+  unset TMP_SSM_PARSED_FILE
+  unset TMP_TD_CONTAINER_PARSED_FILE
+
+
 }
 
 function sanitize() {
@@ -50,7 +59,22 @@ function parse_ssm_file() {
 }
 
 function change_task_definition_file() {
-    jq ".containerDefinitions[0].secrets = $(cat $TMP_SSM_PARSED_FILE)" "$INPUT_TASK_DEFINITION" > task-definition-rendered.json
+    local td_empty_container=$(jq "del(.containerDefinitions[])" "$INPUT_TASK_DEFINITION")
+    for row in $(jq -r '.containerDefinitions[] | @base64' "${INPUT_TASK_DEFINITION}" ); do
+      local app_name
+      app_name=$(echo "${row}" | base64 --decode | jq -r '.name')
+      if [ "$app_name" == "$INPUT_CONTAINER_NAME" ]; then
+          echo "$row" | jq ".secrets = $(cat $TMP_SSM_PARSED_FILE)" > "$TMP_TD_CONTAINER_PARSED_FILE"
+          CONTAINER_EXISTS=1
+      fi
+      td_empty_container=$(echo $td_empty_container | jq ".containerDefinitions += $(cat $TMP_TD_CONTAINER_PARSED_FILE)")
+    done
+    if [ ! $CONTAINER_EXISTS ]; then
+        echo "Container not exists in Task definition file."
+        exit 1
+    else
+      echo "$td_empty_container" > task-definition-rendered.json
+    fi
     echo ::set-output name=task-definition::task-definition-rendered.json
 }
 

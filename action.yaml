@@ -22,6 +22,10 @@ inputs:
     description: Path in SSM
     default: .
     required: false
+  container_name:
+    description: Name of container that you want to add envvars
+    default: application
+    required: false
   region:
     description: The AWS region
     required: true
