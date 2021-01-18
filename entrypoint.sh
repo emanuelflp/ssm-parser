@@ -12,7 +12,7 @@ function main() {
   TMP_SSM_FILE=$(mktemp)
   TMP_SSM_PARSED_FILE=$(mktemp)
   TMP_TD_CONTAINER_PARSED_FILE=$(mktemp)
-  FINAL_TD_FILE=$(mktemp)
+  FINAL_TD_FILE=$(mktemp -p $GITHUB_WORKSPACE)
   CONTAINER_EXISTS=0
   aws_configure
   assume_role
