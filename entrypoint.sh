@@ -80,6 +80,7 @@ function change_task_definition_file() {
     else
         echo "$td_empty_container" > $FINAL_TD_FILE
     fi
+    chmod 644 $FINAL_TD_FILE
     echo ::set-output name=task-definition::$FINAL_TD_FILE
 }
 
