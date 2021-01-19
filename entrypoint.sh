@@ -81,7 +81,7 @@ function change_task_definition_file() {
         echo "$td_empty_container" > $FINAL_TD_FILE
     fi
     chown 1001:116 $FINAL_TD_FILE
-    echo ::set-output name=task-definition::$FINAL_TD_FILE
+    echo ::set-output name=task-definition::$(basename $FINAL_TD_FILE)
 }
 
 function get_ssm_parameters() {
