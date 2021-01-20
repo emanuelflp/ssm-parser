@@ -7,8 +7,11 @@ const fs = require('fs');
 async function run() {
   try {
 
+    const ssm_path = core.getInput('ssm-path', { required: true });
+    const taskDefinitionFile = core.getInput('task-definition', { required: true });
+    const containerName = core.getInput('container-name', { required: true });
+
     const ssm = new aws.SSM();
-    const ssm_path = '/development/ecs/spark-api'
 
     function getSSMStuff(path, memo = [], nextToken) {
       return ssm
@@ -29,8 +32,6 @@ async function run() {
       element.valueFrom = allParams[eachParam]["Value"]
       parsedSsmParams.push(element)
     }
-    const taskDefinitionFile = core.getInput('task-definition', { required: true });
-    const containerName = core.getInput('container_name', { required: false });
 
     // Parse the task definition
     core.debug('Parsing task definition File');
