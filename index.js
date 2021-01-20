@@ -28,7 +28,7 @@ async function run() {
     for (eachParam in allParams) {
       const element = {}
       element.name = allParams[eachParam]["Name"].replace(ssmPath.slice(-1) === '/' ? ssmPath: ssmPath + '/','')
-      element.valueFrom = allParams[eachParam]["Value"]
+      element.valueFrom = allParams[eachParam]["ARN"]
       parsedSsmParams.push(element)
     }
 
