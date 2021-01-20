@@ -5,29 +5,11 @@ branding:
   color: blue
 description: Get SSM Parameters from path and inject all in Task Definition JSON File.
 inputs:
-  access_key_id:
-    description: The AWS access key id
-    required: true
-  secret_access_key:
-    description: The AWS secret access key
-    required: true
-  account_id:
-    description: AWS Account ID
-    required: true
-  assume_role:
-    description: A role to assume under the account_id account.
-    required: false
-    default: ''
-  ssm_path:
+  ssm-path:
     description: Path in SSM
-    default: .
-    required: false
-  container_name:
+    required: true
+  container-name:
     description: Name of container that you want to add envvars
-    default: application
-    required: false
-  region:
-    description: The AWS region
     required: true
   task-definition:
     description: 'The path to the ECS task definition JSON file'

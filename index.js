@@ -7,7 +7,7 @@ const fs = require('fs');
 async function run() {
   try {
 
-    const ssm_path = core.getInput('ssm-path', { required: true });
+    const ssmPath = core.getInput('ssm-path', { required: true });
     const taskDefinitionFile = core.getInput('task-definition', { required: true });
     const containerName = core.getInput('container-name', { required: true });
 
@@ -22,13 +22,12 @@ async function run() {
         return NextToken ? getSSMStuff(path, newMemo, NextToken) : newMemo;
       });
     }
-    const allParams = await getSSMStuff(ssm_path,[])
+    const allParams = await getSSMStuff(ssmPath,[])
 
     const parsedSsmParams = []
     for (eachParam in allParams) {
       const element = {}
-      // console.log(allParams[eachParam]["Name"].replace(ssm_path.slice(-1) === '/' ? ssm_path: ssm_path + '/',''))
-      element.name = allParams[eachParam]["Name"].replace(ssm_path.slice(-1) === '/' ? ssm_path: ssm_path + '/','')
+      element.name = allParams[eachParam]["Name"].replace(ssmPath.slice(-1) === '/' ? ssmPath: ssmPath + '/','')
       element.valueFrom = allParams[eachParam]["Value"]
       parsedSsmParams.push(element)
     }
