@@ -72,7 +72,6 @@ function change_task_definition_file() {
       else
           echo "$row" | base64 --decode > "$TMP_TD_CONTAINER_PARSED_FILE"
       fi
-      cat $TMP_TD_CONTAINER_PARSED_FILE
       td_empty_container=$( echo $td_empty_container | jq --argjson containerInfo "$(cat $TMP_TD_CONTAINER_PARSED_FILE)" '.containerDefinitions += [$containerInfo]')
 
     done
@@ -83,8 +82,11 @@ function change_task_definition_file() {
         echo "$td_empty_container" > $FINAL_TD_FILE
     fi
     chown 1001:116 $FINAL_TD_FILE
-    base_path=$(basename "$FINAL_TD_FILE")
+    echo 0
+    base_path=$(basename $FINAL_TD_FILE)
+    echo 1
     echo ::set-output name=task-definition::$base_path
+    echo 2
 }
 
 function get_ssm_parameters() {
