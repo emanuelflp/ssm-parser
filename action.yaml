@@ -18,5 +18,5 @@ outputs:
   task_definition:
     description: 'The path to the rendered task definition file'
 runs:
-  using: docker
-  image: Dockerfile
+  using: 'node12'
+  main: 'dist/index.js'
