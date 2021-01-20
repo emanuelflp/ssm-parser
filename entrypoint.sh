@@ -66,11 +66,12 @@ function change_task_definition_file() {
       local app_name
       app_name=$(echo "${row}" | base64 --decode | jq -r '.name')
       if [ "$app_name" == "$INPUT_CONTAINER_NAME" ]; then
-          echo "$row" | base64 --decode | jq ".secrets = $(cat $TMP_SSM_PARSED_FILE)" > "$TMP_TD_CONTAINER_PARSED_FILE"
+          echo "$row" | base64 --decode | jq ".secrets = $(cat $TMP_SSM_PARSED_FILE)" >> "$TMP_TD_CONTAINER_PARSED_FILE"
           CONTAINER_EXISTS=1
       else
-          echo "$row" | base64 --decode > "$TMP_TD_CONTAINER_PARSED_FILE"
+          echo "$row" | base64 --decode >> "$TMP_TD_CONTAINER_PARSED_FILE"
       fi
+      cat $TMP_TD_CONTAINER_PARSED_FILE
       td_empty_container=$( echo $td_empty_container | jq --argjson containerInfo "$(cat $TMP_TD_CONTAINER_PARSED_FILE)" '.containerDefinitions += [$containerInfo]')
 
     done
