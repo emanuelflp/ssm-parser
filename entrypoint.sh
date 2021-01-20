@@ -63,25 +63,17 @@ function parse_ssm_file() {
 function change_task_definition_file() {
     # shellcheck disable=SC2155
     local td_empty_container=$(jq "del(.containerDefinitions[])" "$INPUT_TASK_DEFINITION")
-    local num_lines=$(jq -r '.containerDefinitions[] | @base64' "${INPUT_TASK_DEFINITION}")
-    local counter=1
     for row in $(jq -r '.containerDefinitions[] | @base64' "${INPUT_TASK_DEFINITION}" ); do
       local app_name
       app_name=$(echo "${row}" | base64 --decode | jq -r '.name')
       if [ "$app_name" == "$INPUT_CONTAINER_NAME" ]; then
-          echo "$row" | base64 --decode | jq ".secrets = $(cat $TMP_SSM_PARSED_FILE)" >> "$TMP_TD_CONTAINER_PARSED_FILE"
+          echo "$row" | base64 --decode | jq ".secrets = $(cat $TMP_SSM_PARSED_FILE)" > "$TMP_TD_CONTAINER_PARSED_FILE"
           CONTAINER_EXISTS=1
       else
-          echo "$row" | base64 --decode >> "$TMP_TD_CONTAINER_PARSED_FILE"
+          echo "$row" | base64 --decode > "$TMP_TD_CONTAINER_PARSED_FILE"
       fi
       cat $TMP_TD_CONTAINER_PARSED_FILE
-      if [ $num_lines -eq $counter ]; then
-        td_empty_container=$( echo $td_empty_container | jq --argjson containerInfo "$(cat $TMP_TD_CONTAINER_PARSED_FILE )" '.containerDefinitions += [$containerInfo]')
-      else
-        td_empty_container=$( echo $td_empty_container | jq --argjson containerInfo "$(cat $TMP_TD_CONTAINER_PARSED_FILE | sed 's/$/,/')" '.containerDefinitions += [$containerInfo]')
-        counter=$((counter+1))
-      fi
-
+      td_empty_container=$( echo $td_empty_container | jq --argjson containerInfo "$(cat $TMP_TD_CONTAINER_PARSED_FILE)" '.containerDefinitions += [$containerInfo]')
 
     done
     if [ $CONTAINER_EXISTS -eq 0 ]; then
