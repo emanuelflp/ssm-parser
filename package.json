@@ -1,0 +1,37 @@
+{
+  "name": "ssm-to-ecs-secrets",
+  "version": "0.0.1",
+  "description": "Gets ssm parameters by path and transform in secrets for ECS Task Definition",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint **.js",
+    "package": "ncc build index.js -o dist",
+    "test": "eslint **.js && jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emanuelflp/ssm-to-ecs-secrets.git"
+  },
+  "keywords": [
+    "AWS",
+    "GitHub",
+    "Actions",
+    "JavaScript"
+  ],
+  "author": "AWS",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/emanuelflp/ssm-to-ecs-secrets/issues"
+  },
+  "homepage": "https://github.com/emanuelflp/ssm-to-ecs-secrets#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "aws-sdk": "^2.828.0",
+    "tmp": "^0.2.1"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.22.3",
+    "eslint": "^7.18.0",
+    "jest": "^26.6.3"
+  }
+}
